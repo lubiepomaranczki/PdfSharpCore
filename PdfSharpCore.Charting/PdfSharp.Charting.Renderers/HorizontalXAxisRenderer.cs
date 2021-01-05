@@ -135,6 +135,7 @@ namespace PdfSharpCore.Charting.Renderers
       XPoint startPos = new XPoint(xari.X + tickLabelStep / 2, xari.Y + xari.TickLabelsHeight);
       if (xari.MajorTickMark != TickMarkType.None)
         startPos.Y += xari.MajorTickMarkWidth;
+
       foreach (XSeries xs in xari.XValues)
       {
         for (int idx = 0; idx < countTickLabels && idx < xs.Count; ++idx)
@@ -144,7 +145,22 @@ namespace PdfSharpCore.Charting.Renderers
           {
             string tickLabel = xv.Value;
             XSize size = gfx.MeasureString(tickLabel, xari.TickLabelsFont);
-            gfx.DrawString(tickLabel, xari.TickLabelsFont, xari.TickLabelsBrush, startPos.X - size.Width / 2, startPos.Y);
+
+            XGraphicsState state = null;
+            int margin = 0;
+            if (xs.TextRotation != default)
+            {
+              state= gfx.Save();
+              margin = 20;
+              gfx.RotateAtTransform(xs.TextRotation, new XPoint(startPos.X - size.Width / 2, startPos.Y + margin));
+            }
+
+            gfx.DrawString(tickLabel, xari.TickLabelsFont, xari.TickLabelsBrush, startPos.X - size.Width / 2, startPos.Y+margin);
+            
+            if (xs.TextRotation != default && state!=null)
+            {
+              gfx.Restore(state);
+            }
           }
           startPos.X += tickLabelStep;
         }

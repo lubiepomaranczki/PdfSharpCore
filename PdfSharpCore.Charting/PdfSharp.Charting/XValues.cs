@@ -69,9 +69,9 @@ namespace PdfSharpCore.Charting
     /// <summary>
     /// Adds a new XSeries to the collection.
     /// </summary>
-    public XSeries AddXSeries()
+    public XSeries AddXSeries(int textRotation = 0)
     {
-      XSeries xSeries = new XSeries();
+      XSeries xSeries = new XSeries(textRotation);
       Add(xSeries);
       return xSeries;
     }

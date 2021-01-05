@@ -38,11 +38,15 @@ namespace PdfSharpCore.Charting
   /// </summary>
   public class XSeries : ChartObject
   {
+    public int TextRotation { get; }
+
     /// <summary>
     /// Initializes a new instance of the XSeries class.
     /// </summary>
-    public XSeries()
+    /// <param name="textRotation"></param>
+    public XSeries(int textRotation)
     {
+      TextRotation = textRotation;
       xSeriesElements = new XSeriesElements();
     }
 

@@ -38,6 +38,9 @@ namespace PdfSharpCore.Charting.Renderers
   /// </summary>
   internal abstract class ColumnPlotAreaRenderer : ColumnLikePlotAreaRenderer
   {
+    private static XColor _orange = XColor.FromArgb(255, 149, 0);
+    private static XColor _orangeGradientEnd = XColor.FromArgb(244, 163, 114);
+    
     /// <summary>
     /// Initializes a new instance of the ColumnPlotAreaRenderer class with the
     /// specified renderer parameters.
@@ -107,24 +110,27 @@ namespace PdfSharpCore.Charting.Renderers
         {
           // Do not draw column if value is outside yMin/yMax range. Clipping does not make sense.
           if (IsDataInside(yMin, yMax, column.point.value))
-            gfx.DrawRectangle(column.FillFormat, column.Rect);
+          {
+            XLinearGradientBrush brush = new XLinearGradientBrush(column.Rect.BottomLeft, column.Rect.TopLeft, _orange, _orangeGradientEnd);
+            gfx.DrawRectangle(brush, column.Rect);
+          }
         }
       }
 
       // Draw borders around column.
       // A border can overlap neighbor columns, so it is important to draw borders at the end.
-      foreach (SeriesRendererInfo sri in cri.seriesRendererInfos)
-      {
-        foreach (ColumnRendererInfo column in sri.pointRendererInfos)
-        {
-          // Do not draw column if value is outside yMin/yMax range. Clipping does not make sense.
-          if (IsDataInside(yMin, yMax, column.point.value) && column.LineFormat.Width > 0)
-          {
-            lineFormatRenderer = new LineFormatRenderer(gfx, column.LineFormat);
-            lineFormatRenderer.DrawRectangle(column.Rect);
-          }
-        }
-      }
+      //foreach (SeriesRendererInfo sri in cri.seriesRendererInfos)
+      //{
+      //  foreach (ColumnRendererInfo column in sri.pointRendererInfos)
+      //  {
+      //    // Do not draw column if value is outside yMin/yMax range. Clipping does not make sense.
+      //    if (IsDataInside(yMin, yMax, column.point.value) && column.LineFormat.Width > 0)
+      //    {
+      //      lineFormatRenderer = new LineFormatRenderer(gfx, column.LineFormat);
+      //      lineFormatRenderer.DrawRectangle(column.Rect);
+      //    }
+      //  }
+      //}
       gfx.Restore(state);
     }
 
